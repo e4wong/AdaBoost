@@ -80,13 +80,15 @@ def test(final_classifiers, dataset):
 		if (count < 0 and label == 1) or (count > 0 and label == -1):
 			errors = errors + 1
 	return errors/num_samples
+
 def main():
 	training_set = load("hw6train.txt")	
 	test_set = load("hw6test.txt")
 	dictionary = load_dictionary("hw6dictionary.txt")
 	weights = init_weights(training_set)
 	final = []
-	for rounds in range(0,2):
+
+	for rounds in range(0,20):
 		(best_classifier, best_error, word) = (100, float(2), "default")
 		for i in range(0, len(training_set[0][0])):
 			(classifier, error) = weak_learner(i, training_set, weights)
@@ -98,8 +100,11 @@ def main():
 		d = [d_val / z for d_val in d]
 		final.append((alpha, best_classifier, word))
 		weights = d
-	print test(final, training_set)
-	print test(final, test_set)
+		if rounds in [2, 6, 9, 14, 19]:
+			print "Round " + str(rounds + 1) + " :"
+			print "Training Error: " + str(test(final, training_set))
+			print "Testing Error: " + str(test(final, test_set))
+	
 
 
 if __name__ == '__main__':
